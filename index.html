@@ -31,10 +31,11 @@ h2{font-size:15px;margin:0;}
   .controls small{color:var(--muted);font-size:13px}
   .empty{color:var(--muted);padding:18px;text-align:center}
   @media (max-width:480px){.grid{grid-template-columns:1fr}}
+  input[type=search]{padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;background: rgb(243, 226, 72);min-width:200px;}
 </style>
 </head>
 <body>
-  <img src="Mannatech_logo.jpg" alt="logo" width=20px>
+  <img src="Mannatech_logo.jpg" alt="logo" width=150px>
 <div class="wrap">
   <header>
        <h1>Recommended Application</h1><br>
@@ -44,6 +45,7 @@ h2{font-size:15px;margin:0;}
         </div>
   </header>
 <h2><button id="expandAll" title="Expand all">Expand all</button><p> </p> <button id="collapseAll" title="Collapse all">Collapse all</button></h2>
+  <br>
   
   <div id="list" class="grid" aria-live="polite"></div>
 
@@ -154,6 +156,7 @@ popupWindow = window.open(url,winName,settings)
 </script>
 </body>
 </html>
+
 
 
 
