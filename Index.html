@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Recommended Application</title>
+<style>
+  :root{
+    --bg:#c7f3b6; --card:#85c99a; --muted:#536486; --accent:#0f172a;
+    --pill:#ffec3d;
+  }
+  body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial; background:var(--bg); color:var(--accent); margin:0; padding:28px;}
+  .wrap{max-width:980px;margin:0 auto;}
+  header{display:flex;gap:12px;align-items:center;margin-bottom:18px;}
+  h1{font-size:20px;margin:0;}
+  .controls{margin-left:auto;display:flex;gap:8px;align-items:center;}
+  input[type=search]{padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;background: rgb(243, 226, 72);min-width:220px;}
+  button{padding:8px 10px;border-radius:8px;border:1px solid #d1d5db;background:rgb(241, 185, 185);cursor:pointer;}
+h2{font-size:15px;margin:0;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media (max-width:720px){.grid{grid-template-columns:1fr}}
+  details{background:var(--card);border-radius:10px;padding:12px;border:1px solid #e6edf3;box-shadow:0 1px 2px rgba(12,18,22,0.04);}
+  summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;outline:none;padding:6px 2px;}
+  summary::-webkit-details-marker{display:none;}
+  .title{font-weight:600;}
+  .meta{color:var(--muted);font-size:18px;}
+  ul.products{margin:10px 0 0 18px;padding:0;display:flex;flex-direction:column;gap:6px;}
+  li.prod{background:var(--pill);display:inline-block;padding:6px 10px;border-radius:999px;font-size:18px;color:#0b1220;border:1px solid rgba(2,6,23,0.05);}
+  .count{margin-left:auto;background:#eef2f6;padding:4px 8px;border-radius:999px;font-size:14px;color:#0b1220;border:1px solid rgba(2,6,23,0.03);}
+  .controls small{color:var(--muted);font-size:13px}
+  .empty{color:var(--muted);padding:18px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Recommended Application</h1><img src="mannatech_logo.jpg" alt="logo">
+    <div class="controls">
+      <input id="search" type="search" placeholder="Search application or product">
+      <button id="expandAll" title="Expand all">Expand all</button>
+      <button id="collapseAll" title="Collapse all">Collapse all</button>
+      <h2><button type="button" onclick="centeredPopup('product_prices.html','myWindow','600','400','yes');return false">Product Prices</a></h2>
+        </div>
+  </header>
+
+  <div id="list" class="grid" aria-live="polite"></div>
+
+  <div id="empty" class="empty" hidden>No results found.</div>
+</div>
+
+<script>
+const data = {
+  "Antioxidant Support":["Ambrotose AO","Catalyst","MannaBears"],
+  "Blood Sugars Support":["Ambrotose Complex","Catalyst","Plus","NutriVerus","Superfood"],
+  "Bone & Joint Support":["Ambrotose Complex","Catalyst","BounceBack","Omega 3 with D3"],
+  "Brain and Cognitive Support":["Ambrotose Complex","Catalyst","Plus","Cardio Balance","Omega 3 with D3"],
+  "Cardiovascular Support":["Ambrotose Complex","Catalyst","Plus","Cardio Balance","Omega 3 with D3"],
+  "Children Support":["Ambrotose Complex","MannaBears","Immunostart","NutriVerus","Superfood"],
+  "Circulatory Support":["Catalyst","Cardio Balance","Omega 3 with D3"],
+  "Digestion & Bowel Support":["Ambrotose Complex","Catalyst","GI-Zyme","GI-Pro Balance","BounceBack"],
+  "Endocrine Support":["Plus"],
+  "Energy Support":["Catalyst","NutriVerus","Superfood","Empact"],
+  "Essential Vitamins and minerals":["Catalyst","NutriVerus","Superfood","MannaBears"],
+  "Eye Support":["Omega 3 with D3","Catalyst","Cardio Balance","Superfood"],
+  "Fat Loss Support":["Catalyst","Plus","Osolean","Omega 3 with D3","Glyco Café","TruPlenish"],
+  "Fatigue Support":["Ambrotose Complex","Catalyst","Plus","Empact"],
+  "Gastrointestinal Health":["TruPlenish","MannaCleanse","GI-Pro Balance"],
+  "General Wellbeing":["Manna C","MannaBears","Immunostart"],
+  "Healthy Bloodsugar Levels":["Catalyst","NutriVerus"],
+  "Heart & Muscle Support":["NutriVerus","Cardio Balance"],
+  "Immune System Support":["Ambrotose Powders","Catalyst","Immunostart","GI-Pro Balance","NutriVerus","Plus"],
+  "Inflammation":["Ambrotose Complex","Catalyst","BounceBack","Omega 3 with D3"],
+  "Irritable Bowel":["Ambrotose Complex","Catalyst","Bounceback","Omega 3 with D3","GI-Zyme","GI-Pro Balance"],
+  "Low Immune Function (Cancerous Infection, Bacteria)":["Mannapol","Ambrotose Complex","Catalyst","Plus","Immunostart","GI-Pro Balance","NutriVerus"],
+  "Muscle Support":["Catalyst","Osolean","TruPlenish"],
+  "Nervous System":["Ambrotose Complex","Catalyst","Plus","Omega 3 with D3"],
+  "Over-active Immune Function (Auto Immune Condition)":["Ambrotose Advanced","Plus","Omega 3 with D3"],
+  "Skin Care Internal":["Ambrotose Advanced","Ambrotose Complex","Ambrotose AO","Catalyst","Plus","Omega 3 with D3"],
+  "Skincare External":["Emprizone Gel","Firm + Ambrotose Crème","Luminovation Purifying Deep Cleanser","First Essential Toner","Luminous Essence Lotion","Youth Intensive Cream"],
+  "Sport During Workout (Stamina, Circulation, Recovery)":["Catalyst","Empact","Cardio Balance"],
+  "Sport Post Workout (Recovery, Circulation)":["Catalyst","BounceBack","Omega 3 with D3"],
+  "Sports Pre-workout":["Catalyst","Plus","Empact","Cardio Balance","BounceBack"]
+};
+
+const listEl = document.getElementById('list');
+const emptyEl = document.getElementById('empty');
+const searchEl = document.getElementById('search');
+
+function render(filter='') {
+  listEl.innerHTML = '';
+  const q = filter.trim().toLowerCase();
+  const entries = Object.entries(data)
+    .filter(([t, products]) => {
+      if(!q) return true;
+      if(t.toLowerCase().includes(q)) return true;
+      return products.some(p => p.toLowerCase().includes(q));
+    })
+    .sort((a,b)=> a[0].localeCompare(b[0]));
+  if(entries.length===0){ emptyEl.hidden=false; return; } else { emptyEl.hidden=true; }
+  for(const [t, products] of entries){
+    const d = document.createElement('details');
+    const s = document.createElement('summary');
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = t;
+    const count = document.createElement('div');
+    count.className = 'count';
+    count.textContent = products.length + ' product' + (products.length>1?'s':'');
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.textContent = '';
+    s.appendChild(title);
+    s.appendChild(meta);
+    s.appendChild(count);
+    d.appendChild(s);
+
+    const ul = document.createElement('ul');
+    ul.className = 'products';
+    for(const p of products){
+      const li = document.createElement('li');
+      li.className = 'prod';
+      li.textContent = p;
+      ul.appendChild(li);
+    }
+    d.appendChild(ul);
+    listEl.appendChild(d);
+  }
+}
+
+render();
+
+searchEl.addEventListener('input', (e)=> render(e.target.value));
+
+document.getElementById('expandAll').addEventListener('click', ()=>{
+  document.querySelectorAll('details').forEach(d=>d.open=true);
+});
+document.getElementById('collapseAll').addEventListener('click', ()=>{
+  document.querySelectorAll('details').forEach(d=>d.open=false);
+});
+
+/* keyboard: Enter on summary toggles (native), space toggles when focused handled by browser.
+   Clicking product pill could be wired to actions later.
+*/
+var popupWindow = null;
+function centeredPopup(url,winName,w,h,scroll){
+LeftPosition = (screen.width) ? (screen.width-w) : 0;
+TopPosition = (screen.height) ? (screen.height-h) : 0;
+settings =
+'height='+h+',width='+w+',top='+TopPosition+',left='+LeftPosition+',scrollbars='+scroll+',resizable'
+popupWindow = window.open(url,winName,settings)
+}
+</script>
+</body>
+</html>
