@@ -75,7 +75,7 @@ const data = {
   "Immune System Support":["Ambrotose Powders","Catalyst","Immunostart","GI-Pro Balance","NutriVerus","Plus"],
   "Inflammation":["Ambrotose Complex","Catalyst","BounceBack","Omega 3 with D3"],
   "Irritable Bowel":["Ambrotose Complex","Catalyst","Bounceback","Omega 3 with D3","GI-Zyme","GI-Pro Balance"],
-  "Low Immune Function (Cancerous Infection, Bacteria)":["Mannapol","Ambrotose Complex","Catalyst","Plus","Immunostart","GI-Pro Balance","NutriVerus"],
+  "Low Immune Function (Cancerous Infection, Bacteria)":["Manapol","Ambrotose Complex","Catalyst","Plus","Immunostart","GI-Pro Balance","NutriVerus"],
   "Muscle Support":["Catalyst","Osolean","TruPlenish"],
   "Nervous System":["Ambrotose Complex","Catalyst","Plus","Omega 3 with D3"],
   "Over-active Immune Function (Auto Immune Condition)":["Ambrotose Advanced","Plus","Omega 3 with D3"],
@@ -86,65 +86,102 @@ const data = {
   "Sports Pre-workout":["Catalyst","Plus","Empact","Cardio Balance","BounceBack"]
 };
 
+const links = [
+            { name: 'Superfood', url: '../webpages/products/responsive.html#Superfood' },
+            { name: 'NutriVerus', url: '../webpages/products/responsive.html#Nutriverus' },
+            { name: 'Plus', url: '../webpages/products/responsive.html#PLUS' },
+            { name: 'Ambrotose Complex', url: '../webpages/products/responsive.html#Ambrotose_Complex' },
+            { name: 'Ambrotose Advanced', url: '../webpages/products/responsive.html#Ambrotose_Advanced' },
+            { name: 'Catalyst', url: '../webpages/products/responsive.html#Catalyst' },
+            { name: 'Immunostart', url: '../webpages/products/responsive.html#Immunostart' },
+            { name: 'Omega 3 with D3', url: '../webpages/products/responsive.html#Omega3_VitD3' },
+            { name: 'BounceBack', url: '../webpages/products/responsive.html#BounceBack' },
+            { name: 'GI-Pro Balance', url: '../webpages/products/responsive.html#GI-Probalance' },
+            { name: 'GI-Zyme', url: '../webpages/products/responsive.html#GI-Zyme' },
+            { name: 'Ambrotose AO', url: '../webpages/products/responsive.html#Ambrotose_AO' },
+            { name: 'MannaBears', url: '../webpages/products/responsive.html#MannaBears' },
+            { name: 'Cardio Balance', url: '../webpages/products/responsive.html#CardioBalance' },
+            { name: 'Empact', url: '../webpages/products/responsive.html#EMpact' },
+            { name: 'Manapol', url: '../webpages/products/responsive.html#Manapol' },
+            { name: 'Manna C', url: '../webpages/products/responsive.html#Manna-C' },
+            { name: 'MannaCleanse', url: '../webpages/products/responsive.html#MannaCleanse' },
+            { name: 'TruPlenish', url: '../webpages/products/responsive.html#TruPlenish' },
+            { name: 'Glyco Café', url: '../webpages/products/responsive.html#GlycoCafe' },
+            { name: 'Osolean', url: '../webpages/products/responsive.html#Osolean' },
+            { name: 'Emprizone Gel', url: '../webpages/products/responsive.html#Luminovation' },
+            { name: 'Firm + Ambrotose Crème', url: '../webpages/products/responsive.html#Luminovation' },
+            { name: 'Luminovation Purifying Deep Cleanser', url: '../webpages/products/responsive.html#Luminovation' },
+            { name: 'First Essential Toner', url: '../webpages/products/responsive.html#Luminovation' },
+            { name: 'Luminous Essence Lotion', url: '../webpages/products/responsive.html#Luminovation' },
+            { name: 'Youth Intensive Cream', url: '../webpages/products/responsive.html#Luminovation' },
+        ];
 const listEl = document.getElementById('list');
 const emptyEl = document.getElementById('empty');
-const searchEl = document.getElementById('search');
 
-function render(filter='') {
-  listEl.innerHTML = '';
-  const q = filter.trim().toLowerCase();
-  const entries = Object.entries(data)
-    .filter(([t, products]) => {
-      if(!q) return true;
-      if(t.toLowerCase().includes(q)) return true;
-      return products.some(p => p.toLowerCase().includes(q));
-    })
-    .sort((a,b)=> a[0].localeCompare(b[0]));
-  if(entries.length===0){ emptyEl.hidden=false; return; } else { emptyEl.hidden=true; }
-  for(const [t, products] of entries){
-    const d = document.createElement('details');
-    const s = document.createElement('summary');
-    const title = document.createElement('div');
-    title.className = 'title';
-    title.textContent = t;
-    const count = document.createElement('div');
-    count.className = 'count';
-    count.textContent = products.length + ' product' + (products.length>1?'s':'');
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    meta.textContent = '';
-    s.appendChild(title);
-    s.appendChild(meta);
-    s.appendChild(count);
-    d.appendChild(s);
+function render(filter = '') {
+    listEl.innerHTML = '';
 
-    const ul = document.createElement('ul');
-    ul.className = 'products';
-    for(const p of products){
-      const li = document.createElement('li');
-      li.className = 'prod';
-      li.textContent = p;
-      ul.appendChild(li);
+    const q = filter.trim().toLowerCase();
+    const entries = Object.entries(data)
+        .filter(([_, products]) => !q || products.some(p => p.toLowerCase().includes(q)))
+        .sort((a, b) => a[0].localeCompare(b[0]));
+
+    emptyEl.hidden = entries.length > 0;
+
+    for (const [category, products] of entries) {
+        const d = document.createElement('details');
+        const s = document.createElement('summary');
+
+        const title = document.createElement('div');
+        title.className = 'title';
+        title.textContent = category;
+
+        const count = document.createElement('div');
+        count.className = 'count';
+        count.textContent = `${products.length} product${products.length > 1 ? 's' : ''}`;
+
+        s.append(title, count);
+        d.appendChild(s);
+
+        const ul = document.createElement('ul');
+        ul.className = 'products';
+
+        products.forEach(product => {
+            const li = document.createElement('li');
+            li.className = 'prod';
+
+            // Create an anchor element for the product link
+            const link = links.find(link => link.name === product);
+            const anchor = document.createElement('a');
+            anchor.href = link ? link.url : '#';
+            anchor.textContent = product;
+            anchor.target = '_blank'; // Open in a new tab
+            anchor.style.textDecoration = 'none'; // Optional: Remove underline from links
+
+            li.appendChild(anchor);
+            ul.appendChild(li);
+        });
+
+        d.appendChild(ul);
+        listEl.appendChild(d);
     }
-    d.appendChild(ul);
-    listEl.appendChild(d);
-  }
 }
 
+// Initialize render
 render();
 
-searchEl.addEventListener('input', (e)=> render(e.target.value));
+// Search input listener
+document.getElementById('search').addEventListener('input', (e) => render(e.target.value));
 
-document.getElementById('expandAll').addEventListener('click', ()=>{
-  document.querySelectorAll('details').forEach(d=>d.open=true);
+// Expand/Collapse All functionality
+document.getElementById('expandAll').addEventListener('click', () => {
+    document.querySelectorAll('details').forEach(d => d.open = true);
 });
-document.getElementById('collapseAll').addEventListener('click', ()=>{
-  document.querySelectorAll('details').forEach(d=>d.open=false);
+document.getElementById('collapseAll').addEventListener('click', () => {
+    document.querySelectorAll('details').forEach(d => d.open = false);
 });
 
-/* keyboard: Enter on summary toggles (native), space toggles when focused handled by browser.
-   Clicking product pill could be wired to actions later.
-*/
+//Pop-up window  
 var popupWindow = null;
 function centeredPopup(url,winName,w,h,scroll){
 LeftPosition = (screen.width) ? (screen.width-w) : 0;
@@ -156,6 +193,7 @@ popupWindow = window.open(url,winName,settings)
 </script>
 </body>
 </html>
+
 
 
 
